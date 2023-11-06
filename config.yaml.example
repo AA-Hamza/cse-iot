@@ -1,0 +1,6 @@
+mqtt:
+  url: mqtt.mosquitto.com
+  port: 8883
+  username: virtual
+  password: password
+  base: devices/1/
