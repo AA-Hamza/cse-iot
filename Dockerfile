@@ -9,6 +9,7 @@ COPY requirements.txt ./
 RUN apt update -y
 RUN apt install build-essential -y
 RUN pip install -r requirements.txt
+RUN apt-get purge --auto-remove build-essential 
 
 # Bundle app source
 COPY src /app
