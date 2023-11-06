@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  virtual-device:
+    image: ghcr.io/aa-hamza/cse-iot:latest
+    container_name: virtual-device
+    restart: always
+    volumes:
+      - type: bind
+        source: ./config.yaml
+        target: /app/config.yaml
