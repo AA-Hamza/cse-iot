@@ -16,7 +16,6 @@ class Device:
     commands: Dict[str, Command]
     sensors: Dict[str, Sensor]
     status_update_interval: float = 5
-    tasks: list[asyncio.Task] = []
     loop = asyncio.get_event_loop()
 
     mqtt_client: paho.mqtt.client.Client

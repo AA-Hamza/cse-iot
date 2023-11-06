@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'devops/test-deployment'
 
 env:
   IMAGE_NAME: ghcr.io/aa-hamza/cse-iot
@@ -48,15 +49,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: false
+          push: true
           tags: ${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.new_tag }}, ${{env.IMAGE_NAME}}:latest
-
-      # Slim it!
-      - uses: kitabisa/docker-slim-action@v1
-        env:
-          DSLIM_HTTP_PROBE: false
-        with:
-          target: ${{ env.IMAGE_NAME }}:latest
-          tag: "slim"
-
-      - run: docker image push "${{ env.IMAGE_NAME }}" --all-tags
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
