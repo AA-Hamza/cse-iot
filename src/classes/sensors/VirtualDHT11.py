@@ -39,7 +39,7 @@ class PseudoSensor:
         }
         return data
 
-class VirtualHDHT11(Sensor):
+class VirtualDHT11(Sensor):
     name: str = "virtual-dht11"
     state: dict = {"humidity": 55, "temperature": 40}
 
