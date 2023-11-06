@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 # Create app directory
 WORKDIR /app
@@ -12,3 +12,4 @@ RUN pip install -r requirements.txt
 COPY src /app
 
 CMD [ "python", "src/main.py" ]
+
