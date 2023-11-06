@@ -5,17 +5,14 @@ device:
 
     - name: lcd16x2
       config:
-        lcd_rs: 25
-        lcd_en: 24
-        lcd_d4: 23
-        lcd_d5: 17
-        lcd_d6: 18
-        lcd_d7: 22
-        lcd_backlight: 4
-
+        rs: 25
+        en: 24
+        d4: 23
+        d5: 17
+        d6: 18
+        d7: 22
   sensors:
     - name: dht11
-
 
 mqtt:
   url: mqtt.mosquitto.com
