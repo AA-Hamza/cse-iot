@@ -6,7 +6,7 @@ WORKDIR /app
 # Install app dependencies
 COPY requirements.txt ./
 
-RUN apk add gcc
+RUN apk add gcc musl-dev
 RUN pip install -r requirements.txt
 RUN apk remove gcc
 
