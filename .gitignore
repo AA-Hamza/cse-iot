@@ -1,3 +1,5 @@
 config.yaml
 Adafruit_Python_CharLCD
 env
+__pycache__/
+*.py[cod]
