@@ -1,4 +1,4 @@
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
 # Create app directory
 WORKDIR /app
@@ -6,9 +6,8 @@ WORKDIR /app
 # Install app dependencies
 COPY requirements.txt ./
 
-RUN apk add gcc musl-dev
+RUN apt install gcc -y
 RUN pip install -r requirements.txt
-RUN apk remove gcc
 
 # Bundle app source
 COPY src /app
