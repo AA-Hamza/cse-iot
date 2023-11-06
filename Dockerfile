@@ -6,7 +6,8 @@ WORKDIR /app
 # Install app dependencies
 COPY requirements.txt ./
 
-RUN apt install gcc -y
+RUN apt update -y
+RUN apt install build-essential -y
 RUN pip install -r requirements.txt
 
 # Bundle app source
