@@ -91,7 +91,7 @@ class Device:
             if (not self.enabled):
                 break
             self.mqtt_client.publish(topic=self.mqtt_base_topic + "time",
-                                     payload=datetime.now().isoformat(),
+                                     payload=datetime.utcnow().isoformat(),
                                      qos=1,
                                      retain=True)
             await asyncio.sleep(self.status_update_interval)
