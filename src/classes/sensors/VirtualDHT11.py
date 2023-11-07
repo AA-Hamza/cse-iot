@@ -3,6 +3,7 @@ from time import sleep
 from classes.Sensor import Sensor
 import random
 
+
 ## We don't own this class, it belongs to eng. osama samir (https://github.com/osamir)
 class PseudoSensor:
     h_range = [
@@ -39,6 +40,7 @@ class PseudoSensor:
         }
         return data
 
+
 class VirtualDHT11(Sensor):
     name: str = "virtual-dht11"
     state: dict = {"humidity": 55, "temperature": 40}
@@ -53,7 +55,6 @@ class VirtualDHT11(Sensor):
 
     def mqtt_full_name(self) -> str:
         return "sensor." + self.name
-
 
     async def poll(self) -> dict:
         values = self.ps.generate_values()

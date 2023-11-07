@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class Command(ABC):
     name: str
     state: object

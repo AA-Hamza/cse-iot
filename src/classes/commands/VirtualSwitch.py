@@ -17,14 +17,18 @@ class SwitchCommand(Command):
             result = {
                 "feedback": {
                     "error":
-                    self.mqtt_full_name() + ", supported values are 0, 1 and - (string)"
+                    self.mqtt_full_name() +
+                    ", supported values are 0, 1 and - (string)"
                 },
             }
 
         if (result == {}):
             result = {
                 "feedback": {
-                    "message": self.mqtt_full_name() + ", successfully changed the state to " + "1" if self.state else "0"
+                    "message":
+                    self.mqtt_full_name() +
+                    ", successfully changed the state to " +
+                    "1" if self.state else "0"
                 },
                 "switch": "1" if self.state else "0"
             }

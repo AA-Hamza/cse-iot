@@ -42,6 +42,6 @@ def read_config(file_path: str = "./config.yaml"):
             for value in _DEVICE_REQUIRED:
                 if (device_config.get(value, None) == None):
                     raise Exception(
-                        "you need to provide device.{field} in the config file".
-                        format(field=value))
+                        "you need to provide device.{field} in the config file"
+                        .format(field=value))
         return obj

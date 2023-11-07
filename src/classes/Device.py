@@ -42,6 +42,7 @@ class Device:
             logging.info("Recieved msg: {message}, on topic: {topic}".format(
                 message=msg.payload, topic=msg.topic))
             if msg.topic == self.mqtt_base_topic + "command":
+                logging.info("got a new command")
                 try:
                     payload = json.loads(msg.payload)
                     command_name = payload.get("name", None)
@@ -59,6 +60,8 @@ class Device:
                     else:
                         result = command.execute(payload.get("data", None))
                         for topic_extenstion, payload in result.items():
+                            logging.info(self.mqtt_base_topic +
+                                         topic_extenstion)
                             client.publish(self.mqtt_base_topic +
                                            topic_extenstion,
                                            payload=json.dumps(payload),
@@ -68,7 +71,6 @@ class Device:
                     logging.error(
                         "got error while parsing the command payload {payload}, err: {err}"
                         .format(payload=msg.payload, err=e))
-                logging.info("got a new command")
 
         self.mqtt_client.on_message = on_message
 
@@ -85,7 +87,6 @@ class Device:
         self.loop.create_task(self.__start_sensors_polling())
         self.loop.run_forever()
 
-
     async def __send_time_loop(self):
         while True:
             if (not self.enabled):
@@ -96,22 +97,21 @@ class Device:
                                      retain=True)
             await asyncio.sleep(self.status_update_interval)
 
-
     async def __start_sensors_polling(self):
         logging.info("Starting sensors polling")
+
         async def _handle(s):
             while self.enabled:
                 data = await s.poll()
                 for topic_extenstion, payload in data.items():
                     logging.info(f"publishing {topic_extenstion}, {payload}")
-                    self.mqtt_client.publish(self.mqtt_base_topic + "sensors/" +
-                                   topic_extenstion,
-                                   payload=json.dumps(payload),
-                                   qos=1)
+                    self.mqtt_client.publish(self.mqtt_base_topic +
+                                             "sensors/" + topic_extenstion,
+                                             payload=json.dumps(payload),
+                                             qos=1)
+
         for sensor in self.sensors.values():
             self.loop.create_task(_handle(sensor))
-
-
 
     def register_command(self, c: Command):
         name = c.command_name()

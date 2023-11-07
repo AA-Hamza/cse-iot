@@ -7,10 +7,12 @@ def on_connect(client, userdata, flags, rc, properties=None):
     if rc == 0:
         logging.warn("Connected to MQTT Broker!")
     else:
-        logging.error("Failed to connect, return code: "+ rc)
+        logging.error("Failed to connect, return code: " + rc)
+
 
 def on_subscribe(client, userdata, mid, granted_qos, properties=None):
-    logging.info("Subscribed to id: "+ str(mid))
+    logging.info("Subscribed to id: " + str(mid))
+
 
 FIRST_RECONNECT_DELAY = 1
 RECONNECT_RATE = 2
@@ -19,7 +21,7 @@ MAX_RECONNECT_DELAY = 60
 
 
 def on_disconnect(client, userdata, rc, properties=None):
-    logging.error("Disconnected with result code: "+ str(rc))
+    logging.error("Disconnected with result code: " + str(rc))
     reconnect_count, reconnect_delay = 0, FIRST_RECONNECT_DELAY
     while reconnect_count < MAX_RECONNECT_COUNT:
         logging.warn("Reconnecting in %d seconds...", reconnect_delay)
@@ -34,7 +36,7 @@ def on_disconnect(client, userdata, rc, properties=None):
         reconnect_delay = min(reconnect_delay, MAX_RECONNECT_DELAY)
         reconnect_count += 1
     logging.error("Reconnect failed after %s attempts. Exiting...",
-                 reconnect_count)
+                  reconnect_count)
 
 
 def get_mqtt_client(config: dict) -> paho.mqtt.client.Client:

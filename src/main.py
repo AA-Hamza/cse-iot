@@ -51,14 +51,6 @@ def main():
     if (config["device"].get("sensors", None) != None):
         register_sensors(device, config["device"]["sensors"])
 
-    # ## Virtual device virtual switcm
-    # virtual_switch = SwitchCommand()
-    # device.register_command(virtual_switch)
-    #
-    # ## Virtual device virtual sensor
-    # virtual_dht11 = VirtualDHT11()
-    # device.register_sensor(virtual_dht11)
-
     try:
         device.start_device()
     except KeyboardInterrupt:
