@@ -14,5 +14,4 @@ RUN apt-get purge --auto-remove build-essential -y
 # Bundle app source
 COPY src /app
 
-CMD [ "python", "src/main.py" ]
-
+CMD [ "python", "main.py" ]
