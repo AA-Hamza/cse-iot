@@ -2,7 +2,7 @@
 This project aims to create a basic iot system that can handle different kinds of devices ranging from powerful raspberry pis to small devices like nodemcu (esp8266).
 
 ## Design
-![image](https://github.com/AA-Hamza/cse-iot/assets/33000142/17eed566-dc3a-41f7-be8b-561e2047d379)
+![image](https://github.com/AA-Hamza/cse-iot/assets/33000142/6f025e29-2286-40df-acd4-4bc411df3bad)
 - Every device has it's own device number, you can think of it as the device tenant. No other device has access (read or write) to it, unless explictly shared of course. 
 - Every device states it's capabilities stated when it connects to the broker.
   - We mainly support `commands` & `sensors`
