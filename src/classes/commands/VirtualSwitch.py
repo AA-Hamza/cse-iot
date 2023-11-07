@@ -24,7 +24,7 @@ class SwitchCommand(Command):
         if (result == {}):
             result = {
                 "feedback": {
-                    "message": self.mqtt_full_name() + ", successfully changed the"
+                    "message": self.mqtt_full_name() + ", successfully changed the state to " + "1" if self.state else "0"
                 },
                 "switch": "1" if self.state else "0"
             }
