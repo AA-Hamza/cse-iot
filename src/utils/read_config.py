@@ -1,6 +1,7 @@
 import yaml
 
-_REQUIRED = ["url", "port", "username", "password", "base"]
+_MQTT_REQUIRED = ["url", "port", "username", "password", "base"]
+_DEVICE_REQUIRED = ["model"]
 
 
 def read_config(file_path: str = "./config.yaml"):
@@ -22,13 +23,25 @@ def read_config(file_path: str = "./config.yaml"):
     '''
     with open(file_path, "r") as stream:
         obj: dict = yaml.safe_load((stream))
-        mqtt_config = obj.get("mqtt", None)
-        if mqtt_config == None:
+        if obj.get("mqtt", None) == None:
             raise Exception(
                 f"can not find the mqtt section in the configuration file")
-        for value in _REQUIRED:
-            if (mqtt_config.get(value, None) == None):
-                raise Exception(
-                    "you need to provide mqtt.{field} in the config file".
-                    format(field=value))
+        else:
+            device_config = obj["mqtt"]
+            for value in _MQTT_REQUIRED:
+                if (device_config.get(value, None) == None):
+                    raise Exception(
+                        "you need to provide mqtt.{field} in the config file".
+                        format(field=value))
+
+        if obj.get("device", None) == None:
+            raise Exception(
+                f"can not find the device section in the configuration file")
+        else:
+            device_config = obj.get("device", None)
+            for value in _DEVICE_REQUIRED:
+                if (device_config.get(value, None) == None):
+                    raise Exception(
+                        "you need to provide device.{field} in the config file".
+                        format(field=value))
         return obj

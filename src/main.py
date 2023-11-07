@@ -1,10 +1,35 @@
 from classes import Device
-from classes.commands.VirtualSwitch import SwitchCommand
-from classes.sensors.VirtualDHT11 import VirtualHDHT11
 from utils.read_config import read_config
 import logging
 import sys
 
+
+def register_commands(device: Device.Device, commands_config: dict):
+    for command in commands_config:
+        command_name = command["name"]
+        logging.info("Registering command: " + command_name)
+        if (command_name == "virtual-switch"):
+            from classes.commands.VirtualSwitch import SwitchCommand
+            device.register_command(SwitchCommand())
+            logging.info("Registered command: " + command_name + " successfully")
+        elif (command_name == "lcd16x2"):
+            from classes.commands.LCD16x2 import LCD16x2Command
+            device.register_command(LCD16x2Command())
+            logging.info("Registered command: " + command_name + " successfully")
+        else:
+            logging.error("command {command} is not implemented".format(command=command_name))
+
+def register_sensors(device: Device.Device, sensors_config: dict):
+    for sensor in sensors_config:
+        sensor_name = sensor["name"]
+        logging.info("Registering sensor: " + sensor_name)
+        # if (sensor_name == "dht11"):
+        if (sensor_name == "virtual-dht11"):
+            from classes.sensors.VirtualDHT11 import VirtualDHT11
+            device.register_sensor(VirtualDHT11())
+            logging.info("Registered sensor: " + sensor_name + " successfully")
+        else:
+            logging.error("sensor {sensor} is not implemented".format(sensor=sensor_name))
 
 def main():
     ## Logging
@@ -15,22 +40,30 @@ def main():
         level=logging.DEBUG)
     config = read_config()
 
-    ## Virtual device
-    virtual_device = Device.Device(config["mqtt"], "virtual")
+    ## device
+    device = Device.Device(config["mqtt"], config["device"]["model"])
 
-    ## Virtual device virtual switcm
-    virtual_switch = SwitchCommand()
-    virtual_device.register_command(virtual_switch)
+    ## Register device commands
+    if (config["device"].get("commands", None) != None):
+        register_commands(device, config["device"]["commands"])
 
-    ## Virtual device virtual sensor
-    virtual_dht11 = VirtualHDHT11()
-    virtual_device.register_sensor(virtual_dht11)
+    ## Register device sensors
+    if (config["device"].get("sensors", None) != None):
+        register_sensors(device, config["device"]["sensors"])
+
+    # ## Virtual device virtual switcm
+    # virtual_switch = SwitchCommand()
+    # device.register_command(virtual_switch)
+    #
+    # ## Virtual device virtual sensor
+    # virtual_dht11 = VirtualDHT11()
+    # device.register_sensor(virtual_dht11)
 
     try:
-        virtual_device.start_device()
+        device.start_device()
     except KeyboardInterrupt:
         print("stopping the device")
-        virtual_device.stop_device()
+        device.stop_device()
 
 
 if __name__ == "__main__":

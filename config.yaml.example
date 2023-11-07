@@ -1,3 +1,19 @@
+device:
+  model: rock4c+
+  commands:
+    - name: virtual-switch
+
+    - name: lcd16x2
+      config:
+        rs: 25
+        en: 24
+        d4: 23
+        d5: 17
+        d6: 18
+        d7: 22
+  sensors:
+    - name: dht11
+
 mqtt:
   url: mqtt.mosquitto.com
   port: 8883

@@ -2,10 +2,7 @@ name: build & push container
 
 on:
   push:
-    branches:
-      - 'main'
-      - 'devops/test-deployment'
-
+  workflow_dispatch:
 env:
   IMAGE_NAME: ghcr.io/aa-hamza/cse-iot
 
@@ -50,5 +47,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.new_tag }}, ${{env.IMAGE_NAME}}:latest
+          tags: ${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.new_tag }}, ${{ steps.outputs.extract_branch.outputs.BRANCH == 'main' && format('{0}:latest', env.IMAGE_NAME) || ''}}
           platforms: linux/amd64,linux/arm/v7,linux/arm64
