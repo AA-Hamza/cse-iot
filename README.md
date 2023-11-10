@@ -15,3 +15,10 @@ This project aims to create a basic iot system that can handle different kinds o
 - Having a declartive configuration `config.yaml` that just states connected modules to the device, and the user can use the platform without needing to change code.
 - Easily adding more device/module/sensor support.
 - Plugin system
+
+
+## Rock 4c+ testing
+- Broker
+![image](https://github.com/AA-Hamza/cse-iot/assets/33000142/1f97ce0c-b085-4b78-bf7b-5b0cb1422f3c)
+- Results
+![Uploading image.png…]()
