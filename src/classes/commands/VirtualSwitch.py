@@ -2,8 +2,8 @@ from classes.Command import Command
 
 
 class SwitchCommand(Command):
-    name = "virtual-switch"
-    state = False
+    name: str = "virtual-switch"
+    state: bool = False
 
     def execute(self, payload) -> dict:
         result = {}
@@ -21,54 +21,14 @@ class SwitchCommand(Command):
                     ", supported values are 0, 1 and - (string)"
                 },
             }
+            return result
 
-        if (result == {}):
-            result = {
-                "feedback": {
-                    "message":
-                    self.mqtt_full_name() +
-                    ", successfully changed the state to " +
-                    ("1" if self.state else "0")
-                },
-                "switch": "1" if self.state else "0"
-            }
+        result = {
+            "feedback": {
+                "message":
+                self.mqtt_full_name() +
+                ", successfully changed the state to " + str(int(self.state))
+            },
+            self.name: str(int(self.state))
+        }
         return result
-        # if (isinstance(payload, str)):
-        # if (payload == "-"):
-        #     self.state = not self.state
-        # elif (payload == "1"):
-        #     self.state = True
-        # elif (payload == "0"):
-        #     self.state = False
-        # else:
-        #     result = {
-        #         "feedback": {
-        #             "error": self.mqtt_full_name() + ", supported values are 0, 1 and -"
-        #         },
-        #     }
-        #
-        #
-        # result = {
-        #     "feedback": {
-        #         "message": self.mqtt_full_name() + ", successfully changed the"
-        #     },
-        #     "switch": "1" if self.state else "0"
-        # }
-        # return result
-        # if (isinstance(payload, str)):
-        #     if (payload == "-"):
-        #         self.state = not self.state
-        #     elif (payload == "1"):
-        #         self.state = True
-        #     elif (payload == "0"):
-        #         self.state = False
-        #
-        #     result = {
-        #         "feedback": {
-        #             "message":
-        #             "successfully written {message} on lcd".format(
-        #                 message=payload)
-        #         },
-        #         "switch": "1" if self.state else "0"
-        #     }
-        #     return result

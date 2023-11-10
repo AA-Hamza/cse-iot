@@ -26,15 +26,19 @@ class Device:
         mqtt_config: dict,
         model: str,
     ) -> None:
+        logging.info("init device of model: " + model)
         self.model = model
-        logging.info("init device of mode: {model}".format(model=model))
-        self.__init_mqtt(mqtt_config)
         self.commands = {}
         self.sensors = {}
 
-    def __init_mqtt(self, mqtt_config: dict):
+        # Init the mqtt client
+        self.__init_mqtt_client(mqtt_config)
+
+    def __init_mqtt_client(self, mqtt_config: dict):
         self.mqtt_base_topic = mqtt_config["base"]
         self.mqtt_client = get_mqtt_client(mqtt_config)
+
+        ## The device is only subscribing to command topic
         self.mqtt_client.subscribe(self.mqtt_base_topic + "command")
 
         def on_message(client: paho.mqtt.client.Client, userdata,
@@ -47,7 +51,6 @@ class Device:
                     payload = json.loads(msg.payload)
                     command_name = payload.get("name", None)
                     command = self.commands.get(command_name, None)
-                    print(self.commands, self.sensors, command_name)
                     if (command == None):
                         feedback = {
                             "error":
@@ -60,8 +63,6 @@ class Device:
                     else:
                         result = command.execute(payload.get("data", None))
                         for topic_extenstion, payload in result.items():
-                            logging.info(self.mqtt_base_topic +
-                                         topic_extenstion)
                             client.publish(self.mqtt_base_topic +
                                            topic_extenstion,
                                            payload=json.dumps(payload),
@@ -82,7 +83,7 @@ class Device:
     def start_device(self):
         self.enabled = True
         self.mqtt_client.loop_start()
-        self.__advertise_capabilities()
+        self.__mqtt_startup_messages()
         self.loop.create_task(self.__send_time_loop())
         self.loop.create_task(self.__start_sensors_polling())
         self.loop.run_forever()
@@ -121,7 +122,8 @@ class Device:
         name = s.sensor_name()
         self.sensors[name] = s
 
-    def __advertise_capabilities(self):
+    def __mqtt_startup_messages(self):
+        ## Register capabilities
         result = []
         for command in self.commands.values():
             result.append(command.mqtt_full_name())
@@ -130,5 +132,22 @@ class Device:
         payload = json.dumps(result)
         self.mqtt_client.publish(topic=self.mqtt_base_topic + "capabilities",
                                  payload=payload,
+                                 qos=1,
+                                 retain=True)
+
+        ## Register initial state of commands
+        for command in self.commands.values():
+            init_state = command.current_state()
+            for topic_extenstion, payload in init_state.items():
+                logging.info(f"publishing {topic_extenstion}, {payload}")
+                self.mqtt_client.publish(self.mqtt_base_topic +
+                                         topic_extenstion,
+                                         payload=json.dumps(payload),
+                                         qos=1,
+                                         retain=True)
+
+        ## Register device model
+        self.mqtt_client.publish(self.mqtt_base_topic + "model",
+                                 payload=self.model,
                                  qos=1,
                                  retain=True)

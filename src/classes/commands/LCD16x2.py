@@ -9,20 +9,20 @@ class LCD16x2Command(Command):
     state = None
     lcd: characterlcd.Character_LCD_Mono
 
-    def __init__(self, rs=22, en=17, d4=25, d5=24, d6=23, d7=18):
+    def __init__(self,
+                 rs="D19",
+                 en="D21",
+                 d4="D31",
+                 d5="D33",
+                 d6="D35",
+                 d7="D37"):
         self.lcd = characterlcd.Character_LCD_Mono(
-            # rs=digitalio.DigitalInOut(board.pin(rs)),
-            # en=digitalio.DigitalInOut(board.pin(en)),
-            # db4=digitalio.DigitalInOut(board.pin(d4)),
-            # db5=digitalio.DigitalInOut(board.pin(d5)),
-            # db6=digitalio.DigitalInOut(board.pin(d6)),
-            # db7=digitalio.DigitalInOut(board.pin(d7)),
-            rs=digitalio.DigitalInOut(board.D22),
-            en=digitalio.DigitalInOut(board.D17),
-            db4=digitalio.DigitalInOut(board.D25),
-            db5=digitalio.DigitalInOut(board.D24),
-            db6=digitalio.DigitalInOut(board.D23),
-            db7=digitalio.DigitalInOut(board.D18),
+            rs=digitalio.DigitalInOut(getattr(board, rs)),
+            en=digitalio.DigitalInOut(getattr(board, en)),
+            db4=digitalio.DigitalInOut(getattr(board, d4)),
+            db5=digitalio.DigitalInOut(getattr(board, d5)),
+            db6=digitalio.DigitalInOut(getattr(board, d6)),
+            db7=digitalio.DigitalInOut(getattr(board, d7)),
             columns=16,
             lines=2)
         self.lcd.clear()
@@ -38,7 +38,8 @@ class LCD16x2Command(Command):
                     "message":
                     "successfully written {message} on lcd".format(
                         message=payload)
-                }
+                },
+                self.name: payload
             }
             return result
         else:

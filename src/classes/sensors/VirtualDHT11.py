@@ -1,5 +1,4 @@
 import asyncio
-from time import sleep
 from classes.Sensor import Sensor
 import random
 
